@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="BackPack" src="https://i.imgur.com/VW6M7N7.png" width="220"/>
+  <img alt="BackPack" src="https://i.imgur.com/VW6M7N7.png" width="200"/>
 </p>
 
 <h1 align="center">BackPack - Handy, Modern, Secure</h1>
@@ -19,10 +19,15 @@ And what's important: All Open Source.
 
 ## Apps
 
-| | App Name | Source | Description |
-| --- | --- | --- | --- |
-| <img src="https://i.imgur.com/fO9ESY0.png" width=100> | PINcredible | <a href="https://github.com/cyb3rko/pincredible">github.com/cyb3rko/pincredible</a> | App to help you remember any PIN |
+| | App | Description |
+| --- | :---: | --- |
+| <img src="https://i.imgur.com/fO9ESY0.png" width="100"> | <a href="https://github.com/cyb3rko/pincredible">PINcredible</a> | App to help you remember any PIN |
 | | More may be coming in the future... |
+
+## Contribute
+
+You are very welcomed to contribute to this project.  
+You can find more information on the GitHub repos of the apps.
 
 ## Q & A
 
