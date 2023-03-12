@@ -11,6 +11,10 @@
 
 ---
 
+*This repo holds the Backpack library providing base functionality for all Backpack apps. [See here](README_library.md) for more information.*
+
+---
+
 ## About this project
 BackPack is an Android app collection.  
 The goal is to deliver handy but also modern and secure apps for different tasks.
