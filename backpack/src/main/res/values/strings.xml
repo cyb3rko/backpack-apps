@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Backup Fab -->
+    <string name="backup_fab_import">Import</string>
+    <string name="backup_fab_export">Export</string>
+    <string name="backup_fab_description1">Backup menu</string>
+    <string name="backup_fab_description2">Export backup</string>
+    <string name="backup_fab_description3">Import backup</string>
+
+    <!-- Menu Labels -->
+    <string name="menu_home_analysis">App Analysis</string>
+    <string name="menu_home_github">Git</string>
+    <string name="menu_home_settings">Settings</string>
+
+    <!-- Dialog Content -->
+    <string name="dialog_about_button">Show Icon Credits</string>
+    <string name="dialog_about_message">App Version: %1$s (%2$d)\nBuild Type: %3$s\nDevice: %4$s %5$s (%6$s)\nSoftware: Android %7$s (%8$d)</string>
+    <string name="dialog_about_title">About</string>
+    <string name="dialog_credits_button">Open Flaticon</string>
+    <string name="dialog_credits_message">Information icon created by Freepik - Flaticon\n\nVerified icon created by Freepik - Flaticon\n\nEmpty box icon created by juicy_fish - Flaticon\n\nRight Arrow icon created by Roundicons - Flaticon\n\nGit icon created by Creatype - Flaticon\n\nSetting icon created by Freepik - Flaticon\n\nArt icon created by Freepik - Flaticon\n\n%s</string>
+    <string name="dialog_credits_title">Icon Credits</string>
+    <string name="dialog_restart_title">Restart required</string>
+    <string name="dialog_restart_message">The change will be visible on next app start.\n\nDo you want to restart now?</string>
+    <string name="dialog_restart_button2">Later</string>
+    <string name="dialog_error_title">Encryption / Decryption Error</string>
+    <string name="dialog_error_button2">Show error</string>
+
+    <!-- Toasts -->
+    <string name="toast_url_failed">"Opening URL failed, copied URL instead"</string>
+    <string name="toast_stacktrace">Stacktrace copied</string>
+
+    <!-- Analysis -->
+    <string name="analysis_run">Run test by clicking me</string>
+    <string name="analysis_encryption_title">Encryption Speed (AES/CBC/PKCS7)</string>
+    <string name="analysis_encryption_result">Encryption of dummy data took:\n%s</string>
+    <string name="analysis_decryption_title">Decryption Speed (AES/CBC/PKCS7)</string>
+    <string name="analysis_decryption_result">Decryption of dummy data took:\n%s</string>
+    <string name="analysis_hashing_title">Hashing Speed (XXHash3 128)</string>
+    <string name="analysis_hashing_result">Hashing of "This is a test" took:\n%s</string>
+    <string name="analysis_keystore_provider">Android KeyStore Provider</string>
+    <string name="analysis_random_provider">Secure Random Provider</string>
+    <string name="analysis_provider_info" translatable="false">%1$s %2$s (%3$s)</string>
+
+    <!-- Preferences -->
+    <string name="preference_key_adaptive_colors">adaptive_colors</string>
+    <string name="preference_item_material_you">Material You (adaptive colors)</string>
+    <string name="preference_item_material_you_summary">Use adaptive system colors over brand colors</string>
+    <string name="preference_item_material_you_note">Not supported by your Android version</string>
+</resources>

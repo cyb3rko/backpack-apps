@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.BackpackDemo" parent="Theme.Backpack" />
+
+    <style name="TextAppearance.Toolbar.Subtitle" parent="Toolbar.Subtitle" />
+
+    <style name="Preference.SwitchPreferenceCompat" parent="@style/PreferenceSwitch.Backpack" />
+
+</resources>

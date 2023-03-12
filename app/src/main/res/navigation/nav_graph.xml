@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.cyb3rko.backpackdemo.HomeFragment"
+        android:label="@string/home_fragment_label"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/home_to_analysis"
+            app:destination="@id/AnalysisFragment"
+            app:enterAnim="@anim/shrink_in"
+            app:popExitAnim="@anim/shrink_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/AnalysisFragment"
+        android:label="@string/menu_home_analysis"
+        android:name="com.cyb3rko.backpackdemo.AnalysisFragment">
+
+        <action
+            android:id="@+id/analysis_to_home"
+            app:destination="@id/HomeFragment" />
+
+    </fragment>
+
+</navigation>
