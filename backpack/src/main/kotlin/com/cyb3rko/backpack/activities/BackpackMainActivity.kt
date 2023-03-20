@@ -16,8 +16,12 @@
 
 package com.cyb3rko.backpack.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -27,10 +31,12 @@ import androidx.viewbinding.ViewBinding
 import com.cyb3rko.backpack.BuildConfig
 import com.cyb3rko.backpack.interfaces.BackpackMain
 import com.cyb3rko.backpack.utils.Preferences
+import com.cyb3rko.backpack.utils.now
 
 /**
  * The base activity of Backpack apps' main activity with predefined functionality:
  *
+ * - automatic user authentication (timeout: 20 seconds)
  * - screenshot protection for non-debug builds
  * - helper function to show app version in toolbar subtitle
  */
@@ -38,6 +44,15 @@ open class BackpackMainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
     private lateinit var activityInterface: BackpackMain
+    private var latestAuthentication: Long = -1
+
+    private val authenticationResultLauncher =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            Log.d("BackpackAuth", "Caught Auth Activity result")
+            if (result.resultCode == Activity.RESULT_OK) {
+                latestAuthentication = now()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (!BuildConfig.DEBUG) {
@@ -55,6 +70,17 @@ open class BackpackMainActivity : AppCompatActivity() {
         setSupportActionBar(activityInterface.getToolbar())
         setupActionBarWithNavController(navController)
         Preferences.initialize(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Preferences.getBoolean(Preferences.KEY_APP_LOCK, false)) {
+            if (latestAuthentication == -1L || now() - latestAuthentication > 20000) {
+                authenticationResultLauncher.launch(
+                    Intent(applicationContext, BackpackAuthenticationActivity::class.java)
+                )
+            }
+        }
     }
 
     fun showSubtitle(show: Boolean = true) {

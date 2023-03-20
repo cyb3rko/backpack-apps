@@ -26,6 +26,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.cyb3rko.backpack.R
 import com.cyb3rko.backpack.interfaces.BackpackSettingsView
+import com.cyb3rko.backpack.utils.BiometricAuthentication
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
@@ -43,6 +44,20 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         myContext = requireContext()
         setPreferencesFromResource(settingsInterface.getPreferences(), rootKey)
+
+        val keyAppLock = getString(R.string.preference_key_app_lock)
+        val appLockPreference = findPreference<SwitchPreferenceCompat>(keyAppLock)
+        if (appLockPreference != null) {
+            if (BiometricAuthentication(myContext).canAuthenticate()) {
+                appLockPreference.isEnabled = true
+            } else {
+                appLockPreference.setSummary(R.string.preference_item_material_you_note)
+                return
+            }
+            Log.i("Backpack", "App lock preference found and initialized.")
+        } else {
+            Log.e("Backpack", "App lock preference not found.")
+        }
 
         val keyAdaptiveColors = getString(R.string.preference_key_adaptive_colors)
         val adaptiveColorsPreference = findPreference<SwitchPreferenceCompat>(keyAdaptiveColors)

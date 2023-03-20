@@ -7,6 +7,7 @@
     <color name="app_bar_icon">@color/md_theme_light_onSurfaceVariant</color>
     <color name="blur_background">#92000000</color>
     <color name="base_dynamic_color">@color/black</color>
+    <color name="error_text_color">@color/md_theme_light_error</color>
 
     <color name="seed">#F0FF00</color>
     <color name="md_theme_light_primary">#5D6300</color>

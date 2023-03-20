@@ -2,4 +2,5 @@
 <resources>
     <color name="app_bar_icon">@color/md_theme_dark_onSurfaceVariant</color>
     <color name="base_dynamic_color">@color/white</color>
+    <color name="error_text_color">@color/md_theme_dark_error</color>
 </resources>

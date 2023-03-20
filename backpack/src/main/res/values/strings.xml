@@ -42,8 +42,18 @@
     <string name="analysis_provider_info" translatable="false">%1$s %2$s (%3$s)</string>
 
     <!-- Preferences -->
+    <string name="preference_key_app_lock">app_lock</string>
+    <string name="preference_item_app_lock">App Lock</string>
+    <string name="preference_item_app_lock_summary">Require user authentication to unlock the app</string>
+    <string name="preference_item_app_lock_note">Not supported by your phone</string>
     <string name="preference_key_adaptive_colors">adaptive_colors</string>
     <string name="preference_item_material_you">Material You (adaptive colors)</string>
     <string name="preference_item_material_you_summary">Use adaptive system colors over brand colors</string>
     <string name="preference_item_material_you_note">Not supported by your Android version</string>
+
+    <!-- Biometry -->
+    <string name="biometry_lock_title">Unlock Vault</string>
+    <string name="biometry_lock_subtitle">Use your biometry, PIN or password.</string>
+    <string name="auth_failed">Authentication failed, try again</string>
+    <string name="auth_required">Authentication required</string>
 </resources>

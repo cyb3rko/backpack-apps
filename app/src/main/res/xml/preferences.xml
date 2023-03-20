@@ -1,37 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2023 Cyb3rKo
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        app:title="Dummy Category">
+    <PreferenceCategory app:title="Dummy Category">
 
         <SwitchPreferenceCompat
+            app:defaultValue="false"
             app:key="setting_example"
-            app:defaultValue="false"
             app:singleLineTitle="false"
-            app:title="Dummy setting normal"
-            app:summary="This is a normal setting" />
+            app:summary="This is a normal setting"
+            app:title="Dummy setting normal" />
 
         <SwitchPreferenceCompat
-            app:key="setting_example2"
             app:defaultValue="false"
+            app:key="setting_example2"
             app:singleLineTitle="false"
-            app:title="Dummy setting requiring restart"
-            app:summary="Changing this setting requires an app restart" />
+            app:summary="Changing this setting requires an app restart"
+            app:title="Dummy setting requiring restart" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        app:title="Appearance">
+    <PreferenceCategory app:title="Security">
 
         <SwitchPreferenceCompat
-            app:key="@string/preference_key_adaptive_colors"
             app:defaultValue="false"
-            app:singleLineTitle="false"
             app:enabled="false"
-            app:title="@string/preference_item_material_you"
+            app:icon="@drawable/colored_ic_biometry"
+            app:key="app_lock"
+            app:singleLineTitle="false"
+            app:summary="@string/preference_item_app_lock_summary"
+            app:title="@string/preference_item_app_lock" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Appearance">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:enabled="false"
+            app:icon="@drawable/colored_ic_art"
+            app:key="@string/preference_key_adaptive_colors"
+            app:singleLineTitle="false"
             app:summary="@string/preference_item_material_you_summary"
-            app:icon="@drawable/colored_ic_art" />
+            app:title="@string/preference_item_material_you" />
 
     </PreferenceCategory>
 
