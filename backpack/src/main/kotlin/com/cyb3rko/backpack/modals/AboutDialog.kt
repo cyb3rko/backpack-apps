@@ -21,8 +21,8 @@ import android.os.Build
 import androidx.annotation.StringRes
 import com.cyb3rko.backpack.R
 import com.cyb3rko.backpack.data.BuildInfo
-import com.cyb3rko.backpack.openUrl
-import com.cyb3rko.backpack.showDialog
+import com.cyb3rko.backpack.utils.openUrl
+import com.cyb3rko.backpack.utils.showDialog
 
 /**
  * The About Dialog included in the base functionality of BackpackMainFragment.

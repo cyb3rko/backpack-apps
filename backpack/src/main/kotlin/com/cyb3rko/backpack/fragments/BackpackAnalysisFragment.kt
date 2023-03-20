@@ -29,7 +29,7 @@ import com.cyb3rko.backpack.crypto.CryptoManager.EnDecryptionException
 import com.cyb3rko.backpack.databinding.FragmentAnalysisBinding
 import com.cyb3rko.backpack.interfaces.BackpackAnalysis
 import com.cyb3rko.backpack.modals.ErrorDialog
-import com.cyb3rko.backpack.show
+import com.cyb3rko.backpack.utils.show
 import com.cyb3rko.backpack.utils.ObjectSerializer
 import java.io.File
 import java.security.KeyStore

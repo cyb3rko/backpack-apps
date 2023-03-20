@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.NavDirections
 import com.cyb3rko.backpack.data.BuildInfo
-import com.cyb3rko.backpack.interfaces.BackpackMain
 import com.cyb3rko.backpack.fragments.BackpackMainFragment
+import com.cyb3rko.backpack.interfaces.BackpackMainView
+import com.cyb3rko.backpack.utils.showToast
 import com.cyb3rko.backpackdemo.databinding.FragmentHomeBinding
 
-internal class HomeFragment : BackpackMainFragment(), BackpackMain {
+internal class HomeFragment : BackpackMainFragment(), BackpackMainView {
     private var _binding: FragmentHomeBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -31,15 +31,14 @@ internal class HomeFragment : BackpackMainFragment(), BackpackMain {
         super.onViewCreated(view, savedInstanceState)
         bindInterface(this)
         binding.backupFab.apply {
-            setOnOpen { showToast("Backup menu opened") }
-            setOnClose { showToast("Backup menu closed") }
-            setOnImport { showToast("Import triggered") }
-            setOnExport { showToast("Export triggered") }
+            setOnImport { myContext.showToast("Import triggered") }
+            setOnExport { myContext.showToast("Export triggered") }
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(myContext, message, Toast.LENGTH_SHORT).show()
+    override fun onStart() {
+        super.onStart()
+        (requireActivity() as MainActivity).showSubtitle()
     }
 
     override fun getSettingsIntent(): Intent {

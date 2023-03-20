@@ -25,15 +25,19 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.viewbinding.ViewBinding
 import com.cyb3rko.backpack.BuildConfig
+import com.cyb3rko.backpack.interfaces.BackpackMain
+import com.cyb3rko.backpack.utils.Preferences
 
 /**
  * The base activity of Backpack apps' main activity with predefined functionality:
  *
  * - screenshot protection for non-debug builds
+ * - helper function to show app version in toolbar subtitle
  */
 open class BackpackMainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+    private lateinit var activityInterface: BackpackMain
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (!BuildConfig.DEBUG) {
@@ -45,15 +49,34 @@ open class BackpackMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setSupportActionBar(activityInterface.getToolbar())
+        setupActionBarWithNavController(navController)
+        Preferences.initialize(this)
+    }
+
+    fun showSubtitle(show: Boolean = true) {
+        activityInterface.getToolbar().subtitle = if (show) {
+            activityInterface.getVersionName()
+        } else {
+            ""
+        }
+    }
+
     protected fun <T>ViewBinding.asContentView(): T {
         setContentView(this.root)
         @Suppress("UNCHECKED_CAST")
         return (this as T)
     }
 
-    protected fun NavController.applyToActionBar() {
-        setupActionBarWithNavController(this)
+    protected fun NavController.apply() {
         navController = this
+    }
+
+    protected fun bindInterface(activityInterface: BackpackMain) {
+        this.activityInterface = activityInterface
     }
 
     override fun onSupportNavigateUp(): Boolean {

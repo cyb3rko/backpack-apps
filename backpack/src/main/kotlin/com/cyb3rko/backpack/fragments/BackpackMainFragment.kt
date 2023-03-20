@@ -30,19 +30,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.cyb3rko.backpack.R
-import com.cyb3rko.backpack.interfaces.BackpackMain
+import com.cyb3rko.backpack.interfaces.BackpackMainView
 import com.cyb3rko.backpack.modals.AboutDialog
-import com.cyb3rko.backpack.openUrl
+import com.cyb3rko.backpack.utils.Vibration
+import com.cyb3rko.backpack.utils.openUrl
 
 /**
  * The base fragment of Backpack apps' home fragment with predefined functionality:
  *
  * - menu options
  * - myContext variable
+ * - vibrator object
  */
 open class BackpackMainFragment : Fragment() {
-    private lateinit var fragmentInterface: BackpackMain
+    private lateinit var fragmentInterface: BackpackMainView
     protected lateinit var myContext: Context
+    protected val vibrator by lazy { Vibration.getVibrator(myContext) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,7 +94,7 @@ open class BackpackMainFragment : Fragment() {
         )
     }
 
-    protected fun bindInterface(fragmentInterface: BackpackMain) {
+    protected fun bindInterface(fragmentInterface: BackpackMainView) {
         this.fragmentInterface = fragmentInterface
     }
 

@@ -14,42 +14,52 @@
  * limitations under the License.
  */
 
-package com.cyb3rko.backpack
+package com.cyb3rko.backpack.utils
 
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import com.cyb3rko.backpack.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
+// Time helper functions
+
+fun now() = System.currentTimeMillis()
+
+// Logging helper functions
+
+fun Any?.printToLog() = Log.d("Backpack", this.toString())
 
 // View extension functions
 
-internal fun View.show() {
+fun View.show() {
     this.visibility = View.VISIBLE
 }
 
-internal fun View.hide() {
+fun View.hide() {
     this.visibility = View.GONE
 }
 
 // Context extension functions
 
-internal fun Context.showToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+fun Context.showToast(message: String, length: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, length).show()
 }
 
-internal fun Context.storeToClipboard(label: String, text: String) {
+fun Context.storeToClipboard(label: String, text: String) {
     val clip = ClipData.newPlainText(label, text)
     (this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager)
         .setPrimaryClip(clip)
 }
 
-internal fun Context.openUrl(url: String, label: String) {
+fun Context.openUrl(url: String, label: String) {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         this.startActivity(intent)
@@ -90,16 +100,16 @@ internal fun Context.showDialog(
 
 // Fragment extension functions
 
-internal fun Fragment.openUrl(url: String, label: String) {
+fun Fragment.openUrl(url: String, label: String) {
     this.requireContext().openUrl(url, label)
 }
 
 // ByteArray extension functions
 
-internal fun ByteArray.nthLast(n: Int) = this[this.size - n]
+fun ByteArray.nthLast(n: Int) = this[this.size - n]
 
-internal fun ByteArray.lastN(n: Int) = this.copyOfRange(this.size - n, this.size)
+fun ByteArray.lastN(n: Int) = this.copyOfRange(this.size - n, this.size)
 
-internal fun ByteArray.withoutLast() = this.copyOfRange(0, this.size - 1)
+fun ByteArray.withoutLast() = this.copyOfRange(0, this.size - 1)
 
-internal fun ByteArray.withoutLastN(n: Int) = this.copyOfRange(0, this.size - n)
+fun ByteArray.withoutLastN(n: Int) = this.copyOfRange(0, this.size - n)

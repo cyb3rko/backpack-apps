@@ -16,13 +16,24 @@
 
 package com.cyb3rko.backpack.interfaces
 
-import com.google.android.material.appbar.MaterialToolbar
+import android.content.Intent
+import androidx.annotation.StringRes
+import androidx.navigation.NavDirections
+import com.cyb3rko.backpack.data.BuildInfo
 
 /**
- * Interface for main functions of the Backpack parent activity
+ * Interface for main functions of the Backpack parent fragment
  */
-interface BackpackMain {
-    fun getToolbar(): MaterialToolbar
+interface BackpackMainView {
+    fun getSettingsIntent(): Intent
 
-    fun getVersionName(): String
+    fun getAnalysisNavigation(): NavDirections
+
+    @StringRes
+    fun getGithubLink(): Int
+
+    fun getBuildInfo(): BuildInfo
+
+    @StringRes
+    fun getIconCredits(): Int
 }

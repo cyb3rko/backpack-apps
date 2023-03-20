@@ -22,8 +22,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.cyb3rko.backpack.R
 import com.cyb3rko.backpack.databinding.BackupFabBinding
-import com.cyb3rko.backpack.hide
-import com.cyb3rko.backpack.show
+import com.cyb3rko.backpack.utils.hide
+import com.cyb3rko.backpack.utils.show
 
 /**
  * The FloatingActionButton for importing and exporting of Backpack apps' content.
