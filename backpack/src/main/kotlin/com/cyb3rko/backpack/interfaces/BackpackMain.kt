@@ -16,12 +16,15 @@
 
 package com.cyb3rko.backpack.interfaces
 
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.appbar.MaterialToolbar
 
 /**
  * Interface for main functions of the Backpack parent activity
  */
 interface BackpackMain {
+    fun getBinding(): ViewBinding
+
     fun getToolbar(): MaterialToolbar
 
     fun getVersionName(): String

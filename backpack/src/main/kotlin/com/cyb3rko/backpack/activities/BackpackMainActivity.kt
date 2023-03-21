@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
@@ -51,6 +52,7 @@ open class BackpackMainActivity : AppCompatActivity() {
             Log.d("BackpackAuth", "Caught Auth Activity result")
             if (result.resultCode == Activity.RESULT_OK) {
                 latestAuthentication = now()
+                setContentView(activityInterface.getBinding().root)
             }
         }
 
@@ -72,6 +74,13 @@ open class BackpackMainActivity : AppCompatActivity() {
         Preferences.initialize(this)
     }
 
+    override fun onPause() {
+        if (Preferences.getBoolean(Preferences.KEY_APP_LOCK, false)) {
+            setContentView(View(this))
+        }
+        super.onPause()
+    }
+
     override fun onResume() {
         super.onResume()
         if (Preferences.getBoolean(Preferences.KEY_APP_LOCK, false)) {
@@ -79,6 +88,8 @@ open class BackpackMainActivity : AppCompatActivity() {
                 authenticationResultLauncher.launch(
                     Intent(applicationContext, BackpackAuthenticationActivity::class.java)
                 )
+            } else {
+                setContentView(activityInterface.getBinding().root)
             }
         }
     }

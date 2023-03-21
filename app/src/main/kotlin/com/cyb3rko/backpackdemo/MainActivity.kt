@@ -2,6 +2,7 @@ package com.cyb3rko.backpackdemo
 
 import android.os.Bundle
 import androidx.navigation.findNavController
+import androidx.viewbinding.ViewBinding
 import com.cyb3rko.backpack.activities.BackpackMainActivity
 import com.cyb3rko.backpack.interfaces.BackpackMain
 import com.cyb3rko.backpackdemo.databinding.ActivityMainBinding
@@ -15,6 +16,10 @@ class MainActivity : BackpackMainActivity(), BackpackMain {
         binding = ActivityMainBinding.inflate(layoutInflater).asContentView()
         findNavController(R.id.nav_host_fragment_content_main).apply()
         bindInterface(this)
+    }
+
+    override fun getBinding(): ViewBinding {
+        return binding
     }
 
     override fun getToolbar(): MaterialToolbar {
