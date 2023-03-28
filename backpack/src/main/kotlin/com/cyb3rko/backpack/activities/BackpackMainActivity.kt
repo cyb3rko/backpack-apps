@@ -84,13 +84,15 @@ open class BackpackMainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (Preferences.getBoolean(Preferences.KEY_APP_LOCK, false)) {
-            if (latestAuthentication == -1L || now() - latestAuthentication > 20000) {
+            if (latestAuthentication == -1L || now() - latestAuthentication > 10000) {
                 authenticationResultLauncher.launch(
                     Intent(applicationContext, BackpackAuthenticationActivity::class.java)
                 )
             } else {
                 setContentView(activityInterface.getBinding().root)
             }
+        } else {
+            setContentView(activityInterface.getBinding().root)
         }
     }
 
