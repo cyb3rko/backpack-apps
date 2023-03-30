@@ -40,6 +40,7 @@
     <string name="analysis_keystore_provider">Android KeyStore Provider</string>
     <string name="analysis_random_provider">Secure Random Provider</string>
     <string name="analysis_provider_info" translatable="false">%1$s %2$s (%3$s)</string>
+    <string name="analysis_serial_uids_title">Serializable Version UIDs</string>
 
     <!-- Preferences -->
     <string name="preference_key_app_lock">app_lock</string>

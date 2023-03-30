@@ -93,6 +93,10 @@ open class BackpackAnalysisFragment : Fragment() {
             )
             binding.randomSourceCard.show()
         }
+
+        binding.serialUids.text = fragmentInterface.getSerializableUids().joinToString("\n\n") {
+            "${it.first}: ${it.second}"
+        }
     }
 
     @OptIn(ExperimentalTime::class)
