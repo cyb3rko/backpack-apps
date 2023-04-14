@@ -46,7 +46,7 @@ import kotlin.experimental.and
  * The manager object for cryptographic functions like hashing, encryption and (secure) randoms.
  */
 object CryptoManager {
-    private const val KEYSTORE_ALIAS = "iamsecure"
+    private val KEYSTORE_ALIAS = if (!BuildConfig.DEBUG) "iamsecure" else "iamsecuredebug"
     private const val ENC_ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
     private const val ENC_BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
     private const val ENC_PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
