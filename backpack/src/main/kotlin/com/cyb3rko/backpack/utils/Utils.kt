@@ -16,6 +16,7 @@
 
 package com.cyb3rko.backpack.utils
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -28,14 +29,23 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.cyb3rko.backpack.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.text.SimpleDateFormat
+import java.util.Date
 
 // Time helper functions
 
-fun now() = System.currentTimeMillis()
+fun now(): Long = System.currentTimeMillis()
+
+fun dateNow(): Date = Date(now())
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toFormattedString(): String = SimpleDateFormat("yyyyMMdd-HHmmss").format(this)
 
 // Logging helper functions
 
-fun Any?.printToLog() = Log.d("Backpack", this.toString())
+fun Any?.printToLog() {
+    Log.d("Backpack", this.toString())
+}
 
 // View extension functions
 
