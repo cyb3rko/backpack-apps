@@ -21,11 +21,16 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentActivity
+import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.cyb3rko.backpack.R
 import com.cyb3rko.backpack.interfaces.BackpackSettingsView
+import com.cyb3rko.backpack.modals.ListPreferenceDialog
 import com.cyb3rko.backpack.utils.BiometricAuthentication
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -106,6 +111,26 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
         this.onPreferenceChangeListener = OnPreferenceChangeListener { _, _ ->
             showRestartDialog()
             true
+        }
+    }
+
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference is ListPreference) {
+            showListPreferenceDialog(preference)
+        } else {
+            super.onDisplayPreferenceDialog(preference)
+        }
+    }
+
+    private fun showListPreferenceDialog(preference: ListPreference) {
+        ListPreferenceDialog().apply {
+            arguments = bundleOf("key" to preference.key)
+            @Suppress("DEPRECATION")
+            setTargetFragment(this@BackpackSettingsFragment, 0)
+            show(
+                (myContext as FragmentActivity).supportFragmentManager,
+                "androidx.preference.PreferenceFragment.DIALOG"
+            )
         }
     }
 }
