@@ -38,7 +38,7 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.NoSuchPaddingException
 import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 
@@ -46,12 +46,19 @@ import kotlin.experimental.and
  * The manager object for cryptographic functions like hashing, encryption and (secure) randoms.
  */
 object CryptoManager {
-    private val KEYSTORE_ALIAS = if (!BuildConfig.DEBUG) "iamsecure" else "iamsecuredebug"
-    private const val ENC_ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
-    private const val ENC_BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
-    private const val ENC_PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
-    private const val ENC_TRANSFORMATION = "$ENC_ALGORITHM/$ENC_BLOCK_MODE/$ENC_PADDING"
+    private object AesGcmSpecs {
+        const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
+        const val BLOCK_MODE = KeyProperties.BLOCK_MODE_GCM
+        const val PADDING = KeyProperties.ENCRYPTION_PADDING_NONE
+        const val AAD_LENGTH = 16
+        const val TAG_LENGTH = 16
 
+        override fun toString(): String {
+            return "$ALGORITHM/$BLOCK_MODE/$PADDING"
+        }
+    }
+
+    private val KEYSTORE_ALIAS = if (!BuildConfig.DEBUG) "iamsecure" else "iamsecuredebug"
     private val secureRandom by lazy { SecureRandom() }
 
     // Hashing
@@ -94,15 +101,17 @@ object CryptoManager {
         NoSuchAlgorithmException::class,
         NoSuchPaddingException::class
     )
-    private fun getEncryptCipher(key: String?): Cipher {
+    private fun getEncryptCipher(key: String?): Pair<Cipher, ByteArray> {
         val secretKey = if (key != null) {
-            SecretKeySpec(key.toByteArray(), ENC_ALGORITHM)
+            SecretKeySpec(key.toByteArray(), AesGcmSpecs.ALGORITHM)
         } else {
             null
         }
-        return Cipher.getInstance(ENC_TRANSFORMATION).apply {
+        val aad = SecureRandom().generateSeed(AesGcmSpecs.AAD_LENGTH)
+        return Cipher.getInstance(AesGcmSpecs.toString()).apply {
             init(Cipher.ENCRYPT_MODE, secretKey ?: getKey())
-        }
+            updateAAD(aad)
+        } to aad
     }
 
     @Throws(
@@ -110,14 +119,23 @@ object CryptoManager {
         NoSuchAlgorithmException::class,
         NoSuchPaddingException::class
     )
-    private fun getDecryptCipherForIv(iv: ByteArray, key: String?): Cipher {
+    private fun getDecryptCipherForIv(
+        iv: ByteArray,
+        key: String?,
+        aad: ByteArray
+    ): Cipher {
         val secretKey = if (key != null) {
-            SecretKeySpec(key.toByteArray(), ENC_ALGORITHM)
+            SecretKeySpec(key.toByteArray(), AesGcmSpecs.ALGORITHM)
         } else {
             null
         }
-        return Cipher.getInstance(ENC_TRANSFORMATION).apply {
-            init(Cipher.DECRYPT_MODE, secretKey ?: getKey(), IvParameterSpec(iv))
+        return Cipher.getInstance(AesGcmSpecs.toString()).apply {
+            init(
+                Cipher.DECRYPT_MODE,
+                secretKey ?: getKey(),
+                GCMParameterSpec(AesGcmSpecs.TAG_LENGTH * 8, iv)
+            )
+            updateAAD(aad)
         }
     }
 
@@ -131,14 +149,14 @@ object CryptoManager {
     }
 
     private fun createKey(): SecretKey {
-        return KeyGenerator.getInstance(ENC_ALGORITHM).apply {
+        return KeyGenerator.getInstance(AesGcmSpecs.ALGORITHM).apply {
             init(
                 KeyGenParameterSpec.Builder(
                     KEYSTORE_ALIAS,
                     KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
-                    .setBlockModes(ENC_BLOCK_MODE)
-                    .setEncryptionPaddings(ENC_PADDING)
+                    .setBlockModes(AesGcmSpecs.BLOCK_MODE)
+                    .setEncryptionPaddings(AesGcmSpecs.PADDING)
                     .setUserAuthenticationRequired(false)
                     .setRandomizedEncryptionRequired(true)
                     .build()
@@ -167,8 +185,12 @@ object CryptoManager {
         key: String? = null
     ): ByteArray {
         val encryptCipher: Cipher
+        val aad: ByteArray
         try {
-            encryptCipher = getEncryptCipher(key)
+            getEncryptCipher(key).apply {
+                encryptCipher = first
+                aad = second
+            }
         } catch (e: KeyStoreException) {
             throw EnDecryptionException(
                 "The KeyStore access failed.",
@@ -176,12 +198,12 @@ object CryptoManager {
             )
         } catch (e: NoSuchAlgorithmException) {
             throw EnDecryptionException(
-                "The requested algorithm $ENC_ALGORITHM is not supported.",
+                "The requested algorithm $AesGcmSpecs is not supported.",
                 e.stackTraceToString()
             )
         } catch (e: NoSuchPaddingException) {
             throw EnDecryptionException(
-                "The requested padding $ENC_PADDING is not supported.",
+                "The requested padding ${AesGcmSpecs.PADDING} is not supported.",
                 e.stackTraceToString()
             )
         }
@@ -189,6 +211,7 @@ object CryptoManager {
         val encryptedBytes = encryptCipher.doFinal(data)
         outputStream.use {
             it.write(encryptCipher.iv)
+            it.write(aad)
             it.write(encryptedBytes)
         }
         return encryptedBytes
@@ -207,13 +230,15 @@ object CryptoManager {
     @Throws(EnDecryptionException::class)
     private fun doDecrypt(inputStream: FileInputStream, key: String? = null): ByteArray {
         return inputStream.use {
-            val iv = ByteArray(16)
+            val iv = ByteArray(12)
+            val aad = ByteArray(16)
             it.read(iv)
+            it.read(aad)
             val encryptedBytes = it.readBytes()
 
             val decryptCipher: Cipher
             try {
-                decryptCipher = getDecryptCipherForIv(iv, key)
+                decryptCipher = getDecryptCipherForIv(iv, key, aad)
             } catch (e: KeyStoreException) {
                 throw EnDecryptionException(
                     "The KeyStore access failed.",
@@ -221,12 +246,12 @@ object CryptoManager {
                 )
             } catch (e: NoSuchAlgorithmException) {
                 throw EnDecryptionException(
-                    "The requested algorithm $ENC_ALGORITHM is not supported.",
+                    "The requested algorithm $AesGcmSpecs is not supported.",
                     e.stackTraceToString()
                 )
             } catch (e: NoSuchPaddingException) {
                 throw EnDecryptionException(
-                    "The requested padding $ENC_PADDING is not supported.",
+                    "The requested padding ${AesGcmSpecs.PADDING} is not supported.",
                     e.stackTraceToString()
                 )
             }
