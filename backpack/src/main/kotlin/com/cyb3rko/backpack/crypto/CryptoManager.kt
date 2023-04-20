@@ -22,12 +22,12 @@ import android.util.Log
 import com.cyb3rko.backpack.BuildConfig
 import com.cyb3rko.backpack.crypto.xxhash3.XXH3_128
 import com.cyb3rko.backpack.utils.ObjectSerializer
+import com.cyb3rko.backpack.utils.firstN
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
-import java.nio.charset.Charset
 import java.security.KeyStore
 import java.security.KeyStoreException
 import java.security.MessageDigest
@@ -57,8 +57,14 @@ object CryptoManager {
             return "$ALGORITHM/$BLOCK_MODE/$PADDING"
         }
     }
+    private object Sha512Specs {
+        const val ALGORITHM = "SHA-512"
+        const val STRETCH_ITERATIONS = 250_000
+    }
 
     private val KEYSTORE_ALIAS = if (!BuildConfig.DEBUG) "iamsecure" else "iamsecuredebug"
+
+    private val sha512Digest by lazy { MessageDigest.getInstance(Sha512Specs.ALGORITHM) }
     private val secureRandom by lazy { SecureRandom() }
 
     // Hashing
@@ -76,10 +82,32 @@ object CryptoManager {
         return hash
     }
 
-    fun shaHash(plaintext: String): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        digest.update(plaintext.toByteArray(Charset.defaultCharset()))
-        return digest.digest().toHex()
+    fun shaHash(
+        plaintext: String,
+        rounds: Int = Sha512Specs.STRETCH_ITERATIONS
+    ): Hash {
+        var data = plaintext.toByteArray()
+        val salt = getSalt()
+        sha512Digest.update(salt)
+        repeat(rounds) {
+            sha512Digest.update(data)
+            data = sha512Digest.digest()
+        }
+        return Hash(data, salt)
+    }
+
+    private fun shaHashWithKey(
+        plaintext: String,
+        salt: ByteArray,
+        rounds: Int = Sha512Specs.STRETCH_ITERATIONS
+    ): ByteArray {
+        var data = plaintext.toByteArray()
+        sha512Digest.update(salt)
+        repeat(rounds) {
+            sha512Digest.update(data)
+            data = sha512Digest.digest()
+        }
+        return data
     }
 
     private fun ByteArray.toHex(): String {
@@ -89,6 +117,14 @@ object CryptoManager {
     // Random
 
     fun getSecureRandom() = secureRandom.nextInt(10)
+
+    private fun getSalt() = getSecureBytes(32)
+
+    private fun getSecureBytes(size: Int): ByteArray {
+        val bytes = ByteArray(size)
+        secureRandom.nextBytes(bytes)
+        return bytes
+    }
 
     // Encryption / Decryption
 
@@ -101,9 +137,9 @@ object CryptoManager {
         NoSuchAlgorithmException::class,
         NoSuchPaddingException::class
     )
-    private fun getEncryptCipher(key: String?): Pair<Cipher, ByteArray> {
+    private fun getEncryptCipher(key: ByteArray?): Pair<Cipher, ByteArray> {
         val secretKey = if (key != null) {
-            SecretKeySpec(key.toByteArray(), AesGcmSpecs.ALGORITHM)
+            SecretKeySpec(key, AesGcmSpecs.ALGORITHM)
         } else {
             null
         }
@@ -121,11 +157,11 @@ object CryptoManager {
     )
     private fun getDecryptCipherForIv(
         iv: ByteArray,
-        key: String?,
+        key: ByteArray?,
         aad: ByteArray
     ): Cipher {
         val secretKey = if (key != null) {
-            SecretKeySpec(key.toByteArray(), AesGcmSpecs.ALGORITHM)
+            SecretKeySpec(key, AesGcmSpecs.ALGORITHM)
         } else {
             null
         }
@@ -173,20 +209,21 @@ object CryptoManager {
     fun encrypt(
         data: ByteArray,
         outputStream: OutputStream?,
-        key: String
+        hash: Hash
     ): ByteArray {
-        return doEncrypt(data, outputStream as FileOutputStream, key)
+        return doEncrypt(data, outputStream as FileOutputStream, hash)
     }
 
     @Throws(EnDecryptionException::class)
     private fun doEncrypt(
         data: ByteArray,
         outputStream: FileOutputStream,
-        key: String? = null
+        hash: Hash? = null
     ): ByteArray {
         val encryptCipher: Cipher
         val aad: ByteArray
         try {
+            val key = hash?.value?.firstN(32)
             getEncryptCipher(key).apply {
                 encryptCipher = first
                 aad = second
@@ -212,6 +249,9 @@ object CryptoManager {
         outputStream.use {
             it.write(encryptCipher.iv)
             it.write(aad)
+            if (hash != null) {
+                it.write(hash.salt)
+            }
             it.write(encryptedBytes)
         }
         return encryptedBytes
@@ -223,17 +263,27 @@ object CryptoManager {
     }
 
     @Throws(EnDecryptionException::class)
-    fun decrypt(inputStream: InputStream?, key: String): ByteArray {
-        return doDecrypt(inputStream as FileInputStream, key)
+    fun decrypt(inputStream: InputStream?, input: String): ByteArray {
+        return doDecrypt(inputStream as FileInputStream, input)
     }
 
     @Throws(EnDecryptionException::class)
-    private fun doDecrypt(inputStream: FileInputStream, key: String? = null): ByteArray {
+    private fun doDecrypt(inputStream: FileInputStream, input: String? = null): ByteArray {
         return inputStream.use {
             val iv = ByteArray(12)
             val aad = ByteArray(16)
+            val salt = ByteArray(32)
+
             it.read(iv)
             it.read(aad)
+
+            val key = if (input != null) {
+                it.read(salt)
+                shaHashWithKey(input, salt).firstN(32)
+            } else {
+                null
+            }
+
             val encryptedBytes = it.readBytes()
 
             val decryptCipher: Cipher
@@ -287,6 +337,12 @@ object CryptoManager {
         data = data.minus(string)
         encrypt(ObjectSerializer.serialize(data), file)
     }
+
+    @Suppress("ArrayInDataClass")
+    data class Hash(
+        val value: ByteArray,
+        val salt: ByteArray
+    )
 
     class EnDecryptionException(
         message: String,

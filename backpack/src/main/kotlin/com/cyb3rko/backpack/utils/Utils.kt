@@ -116,6 +116,8 @@ fun Fragment.openUrl(url: String, label: String) {
 
 // ByteArray extension functions
 
+fun ByteArray.firstN(n: Int) = this.copyOfRange(0, n)
+
 fun ByteArray.nthLast(n: Int) = this[this.size - n]
 
 fun ByteArray.lastN(n: Int) = this.copyOfRange(this.size - n, this.size)
