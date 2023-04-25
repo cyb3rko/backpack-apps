@@ -16,6 +16,7 @@
 
 package com.cyb3rko.backpack.crypto
 
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Log
@@ -65,7 +66,13 @@ object CryptoManager {
     private val KEYSTORE_ALIAS = if (!BuildConfig.DEBUG) "iamsecure" else "iamsecuredebug"
 
     private val sha512Digest by lazy { MessageDigest.getInstance(Sha512Specs.ALGORITHM) }
-    private val secureRandom by lazy { SecureRandom() }
+    private val secureRandom by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SecureRandom.getInstanceStrong()
+        } else {
+            SecureRandom()
+        }
+    }
 
     // Hashing
 
