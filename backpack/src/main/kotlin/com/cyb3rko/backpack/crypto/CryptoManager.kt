@@ -42,6 +42,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
+import kotlin.random.Random
 
 /**
  * The manager object for cryptographic functions like hashing, encryption and (secure) randoms.
@@ -123,7 +124,9 @@ object CryptoManager {
 
     // Random
 
-    fun getSecureRandom() = secureRandom.nextInt(10)
+    fun getRandom(from: Int, until: Int) = Random.nextInt(from, until)
+
+    fun getSecureRandom(until: Int, offset: Int = 0) = secureRandom.nextInt(until) + offset
 
     private fun getSalt() = getSecureBytes(32)
 
