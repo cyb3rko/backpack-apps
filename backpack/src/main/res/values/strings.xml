@@ -31,9 +31,9 @@
 
     <!-- Analysis -->
     <string name="analysis_run">Run test by clicking me</string>
-    <string name="analysis_encryption_title">Encryption Speed (AES/CBC/PKCS7)</string>
+    <string name="analysis_encryption_title">Encryption Speed (AES/GCM/NoPadding)</string>
     <string name="analysis_encryption_result">Encryption of dummy data took:\n%s</string>
-    <string name="analysis_decryption_title">Decryption Speed (AES/CBC/PKCS7)</string>
+    <string name="analysis_decryption_title">Decryption Speed (AES/GCM/NoPadding)</string>
     <string name="analysis_decryption_result">Decryption of dummy data took:\n%s</string>
     <string name="analysis_hashing_title">Hashing Speed (XXHash3 128)</string>
     <string name="analysis_hashing_result">Hashing of "This is a test" took:\n%s</string>

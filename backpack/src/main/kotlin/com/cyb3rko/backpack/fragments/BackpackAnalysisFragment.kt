@@ -18,6 +18,10 @@ package com.cyb3rko.backpack.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -94,9 +98,19 @@ open class BackpackAnalysisFragment : Fragment() {
             binding.randomSourceCard.show()
         }
 
-        binding.serialUids.text = fragmentInterface.getSerializableUids().joinToString("\n\n") {
-            "${it.first}: ${it.second}"
+        binding.serialUids.text = getSerializableUidsString()
+    }
+
+    private fun getSerializableUidsString(): Spannable {
+        val ssb = SpannableStringBuilder()
+        fragmentInterface.getSerializableUids().forEach {
+            ssb.append(
+                SpannableString("${it.first}: ${it.second}\n\n").apply {
+                    setSpan(UnderlineSpan(), 0, it.first.length, 0)
+                }
+            )
         }
+        return ssb.delete(ssb.length -2, ssb.length)
     }
 
     @OptIn(ExperimentalTime::class)
