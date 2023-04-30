@@ -53,13 +53,16 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
         val keyAppLock = getString(R.string.preference_key_app_lock)
         val appLockPreference = findPreference<SwitchPreferenceCompat>(keyAppLock)
         if (appLockPreference != null) {
+            var logMessage = "App lock preference found and initialized: "
             if (BiometricAuthentication(myContext).canAuthenticate()) {
+                logMessage += "Enabled"
                 appLockPreference.isEnabled = true
             } else {
+                logMessage += "Disabled"
                 appLockPreference.setSummary(R.string.preference_item_material_you_note)
                 return
             }
-            Log.i("Backpack", "App lock preference found and initialized.")
+            Log.i("Backpack", logMessage)
         } else {
             Log.e("Backpack", "App lock preference not found.")
         }
@@ -71,9 +74,12 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
             return
         }
         findPreference<SwitchPreferenceCompat>(keyAdaptiveColors)!!.let {
+            var logMessage = "Adaptive Colors preference found and initialized: "
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                logMessage += "Enabled"
                 it.isEnabled = true
             } else {
+                logMessage += "Disabled"
                 it.setSummary(R.string.preference_item_material_you_note)
                 return
             }
@@ -81,7 +87,7 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
                 showRestartDialog()
                 true
             }
-            Log.i("Backpack", "Adaptive Colors preference found and initialized.")
+            Log.i("Backpack", logMessage)
         }
     }
 
