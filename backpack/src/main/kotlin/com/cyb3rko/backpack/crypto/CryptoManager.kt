@@ -33,7 +33,9 @@ import java.security.KeyStore
 import java.security.KeyStoreException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.security.Provider
 import java.security.SecureRandom
+import java.security.Security
 import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -138,8 +140,19 @@ object CryptoManager {
 
     // Encryption / Decryption
 
-    private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply {
-        load(null)
+    private val keyStore = getKeyStoreInstance(Security.getProviders().reversed(), 0)
+
+    private fun getKeyStoreInstance(providers: List<Provider>, index: Int): KeyStore {
+        val providerName = providers[index].name
+        return try {
+            Log.i("CryptoManager", "Getting provider $providerName")
+            KeyStore.getInstance(providerName).apply {
+                load(null)
+            }
+        } catch (e: Exception) {
+            Log.w("CryptoManager", "Provider $providerName not found")
+            getKeyStoreInstance(providers, index + 1)
+        }
     }
 
     @Throws(
