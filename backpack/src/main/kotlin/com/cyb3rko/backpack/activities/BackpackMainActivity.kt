@@ -32,6 +32,7 @@ import androidx.viewbinding.ViewBinding
 import com.cyb3rko.backpack.BuildConfig
 import com.cyb3rko.backpack.interfaces.BackpackMain
 import com.cyb3rko.backpack.utils.Preferences
+import com.cyb3rko.backpack.utils.Safe
 import com.cyb3rko.backpack.utils.now
 
 /**
@@ -64,6 +65,7 @@ open class BackpackMainActivity : AppCompatActivity() {
             )
         }
         super.onCreate(savedInstanceState)
+        Safe.initialize(this)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
-internal object ObjectSerializer {
+object ObjectSerializer {
     fun serialize(obj: Any): ByteArray {
         val baos = ByteArrayOutputStream()
         val oos = ObjectOutputStream(baos)
