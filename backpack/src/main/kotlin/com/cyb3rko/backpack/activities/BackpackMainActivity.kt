@@ -30,6 +30,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.viewbinding.ViewBinding
 import com.cyb3rko.backpack.BuildConfig
+import com.cyb3rko.backpack.ExceptionHandler
 import com.cyb3rko.backpack.interfaces.BackpackMain
 import com.cyb3rko.backpack.utils.Preferences
 import com.cyb3rko.backpack.utils.Safe
@@ -69,6 +70,9 @@ open class BackpackMainActivity : AppCompatActivity() {
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
+        Thread.setDefaultUncaughtExceptionHandler(
+            ExceptionHandler(this, activityInterface.getGitHubLink())
+        )
         super.onPostCreate(savedInstanceState)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setSupportActionBar(activityInterface.getToolbar())

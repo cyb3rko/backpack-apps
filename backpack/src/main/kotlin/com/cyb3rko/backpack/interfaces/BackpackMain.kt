@@ -28,4 +28,6 @@ interface BackpackMain {
     fun getToolbar(): MaterialToolbar
 
     fun getVersionName(): String
+
+    fun getGitHubLink(): String
 }

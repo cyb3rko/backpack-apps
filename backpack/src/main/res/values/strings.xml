@@ -28,6 +28,7 @@
     <!-- Toasts -->
     <string name="toast_url_failed">"Opening URL failed, copied URL instead"</string>
     <string name="toast_stacktrace">Stacktrace copied</string>
+    <string name="toast_github_url_missing">Missing GitHub repo url</string>
 
     <!-- Analysis -->
     <string name="analysis_run">Run test by clicking me</string>
@@ -57,4 +58,8 @@
     <string name="biometry_lock_subtitle">Use your biometry, PIN or password.</string>
     <string name="auth_failed">Authentication failed, try again</string>
     <string name="auth_required">Authentication required</string>
+
+    <!-- Uncaught exceptions -->
+    <string name="exception_report">Report to app creator</string>
+    <string name="exception_copy">Copy to clipboard</string>
 </resources>
