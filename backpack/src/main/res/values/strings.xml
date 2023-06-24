@@ -24,6 +24,11 @@
     <string name="dialog_restart_button2">Later</string>
     <string name="dialog_error_title">Encryption / Decryption Error</string>
     <string name="dialog_error_button2">Show error</string>
+    <string name="dialog_input_button1">Save</string>
+    <string name="dialog_input_button2">Cancel</string>
+    <string name="dialog_name_error_length">Use between %1$d-%2$d characters</string>
+    <string name="dialog_password_hint">Your Password</string>
+    <string name="dialog_password_error">Invalid integrity, most likely wrong password</string>
 
     <!-- Toasts -->
     <string name="toast_url_failed">"Opening URL failed, copied URL instead"</string>
