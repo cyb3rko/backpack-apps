@@ -24,6 +24,9 @@ import com.cyb3rko.backpack.BuildConfig
 import com.cyb3rko.backpack.crypto.xxhash3.XXH3_128
 import com.cyb3rko.backpack.utils.ObjectSerializer
 import com.cyb3rko.backpack.utils.firstN
+import com.lambdapioneer.argon2kt.Argon2Kt
+import com.lambdapioneer.argon2kt.Argon2Mode
+import com.lambdapioneer.argon2kt.Argon2Version
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -36,6 +39,8 @@ import java.security.NoSuchAlgorithmException
 import java.security.Provider
 import java.security.SecureRandom
 import java.security.Security
+import java.util.LinkedList
+import java.util.Queue
 import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -61,6 +66,13 @@ object CryptoManager {
             return "$ALGORITHM/$BLOCK_MODE/$PADDING"
         }
     }
+    private object Argon2Specs {
+        val MODE = Argon2Mode.ARGON2_ID
+        val VERSION = Argon2Version.V13
+        const val ITERATIONS = 10
+        const val KIBI_BYTE = 65_536
+        const val HASH_LENGTH = 32
+    }
     private object Sha512Specs {
         const val ALGORITHM = "SHA-512"
         const val STRETCH_ITERATIONS = 250_000
@@ -68,6 +80,7 @@ object CryptoManager {
 
     private val KEYSTORE_ALIAS = if (!BuildConfig.DEBUG) "iamsecure" else "iamsecuredebug"
 
+    private val argon2Kt by lazy { Argon2Kt() }
     private val sha512Digest by lazy { MessageDigest.getInstance(Sha512Specs.ALGORITHM) }
     private val secureRandom by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -90,6 +103,32 @@ object CryptoManager {
             Log.d("CryptoManager", "Hash: $hash")
         }
         return hash
+    }
+
+    fun argon2Hash(plaintext: String): Hash {
+        val salt = getSalt()
+        val hash = argon2Kt.hash(
+            mode = Argon2Specs.MODE,
+            password = plaintext.toByteArray(),
+            salt = salt,
+            tCostInIterations = Argon2Specs.ITERATIONS,
+            mCostInKibibyte = Argon2Specs.KIBI_BYTE,
+            hashLengthInBytes = Argon2Specs.HASH_LENGTH, // Byte -> 256 Bit
+            version = Argon2Specs.VERSION
+        )
+        return Hash(hash.rawHashAsByteArray(), salt)
+    }
+
+    private fun argon2HashWithKey(ciphertext: String, salt: ByteArray): ByteArray {
+        return argon2Kt.hash(
+            mode = Argon2Specs.MODE,
+            password = ciphertext.toByteArray(),
+            salt = salt,
+            tCostInIterations = Argon2Specs.ITERATIONS,
+            mCostInKibibyte = Argon2Specs.KIBI_BYTE,
+            hashLengthInBytes = Argon2Specs.HASH_LENGTH, // Byte -> 256 Bit
+            version = Argon2Specs.VERSION
+        ).rawHashAsByteArray()
     }
 
     fun shaHash(
@@ -292,52 +331,68 @@ object CryptoManager {
 
     @Throws(EnDecryptionException::class)
     private fun doDecrypt(inputStream: FileInputStream, input: String? = null): ByteArray {
-        return inputStream.use {
+        return inputStream.use { stream ->
             val iv = ByteArray(12)
             val aad = ByteArray(16)
             val salt = ByteArray(32)
 
-            it.read(iv)
-            it.read(aad)
+            stream.read(iv)
+            stream.read(aad)
 
-            val key = if (input != null) {
-                it.read(salt)
-                shaHashWithKey(input, salt).firstN(32)
+            val keys: Queue<ByteArray>?
+            if (input != null) {
+                keys = LinkedList()
+                stream.read(salt)
+                keys.add(argon2HashWithKey(input, salt).firstN(32))
+                keys.add(shaHashWithKey(input, salt).firstN(32))
             } else {
-                null
+                keys = null
             }
+            val encryptedBytes = stream.readBytes()
+            var key: ByteArray? = null
+            repeat(keys?.size ?: 1) {
+                keys?.let { keys ->
+                    Log.d(
+                        "CryptoManager",
+                        when (it) {
+                            0 -> "Decrypting with Argon2"
+                            1 -> "Decrypting with SHA"
+                            else -> "Available algorithms exhausted"
+                        }
+                    )
+                    key = keys.remove()
+                }
 
-            val encryptedBytes = it.readBytes()
-
-            val decryptCipher: Cipher
-            try {
-                decryptCipher = getDecryptCipherForIv(iv, key, aad)
-            } catch (e: KeyStoreException) {
-                throw EnDecryptionException(
-                    "The KeyStore access failed.",
-                    e.stackTraceToString()
-                )
-            } catch (e: NoSuchAlgorithmException) {
-                throw EnDecryptionException(
-                    "The requested algorithm $AesGcmSpecs is not supported.",
-                    e.stackTraceToString()
-                )
-            } catch (e: NoSuchPaddingException) {
-                throw EnDecryptionException(
-                    "The requested padding ${AesGcmSpecs.PADDING} is not supported.",
-                    e.stackTraceToString()
-                )
-            }
-            try {
-                decryptCipher.doFinal(encryptedBytes)
-            } catch (e: BadPaddingException) {
-                if (e.stackTraceToString().contains("BAD_DECRYPT")) {
-                    e.printStackTrace()
-                    ByteArray(0)
-                } else {
-                    throw e
+                val decryptCipher: Cipher
+                try {
+                    decryptCipher = getDecryptCipherForIv(iv, key, aad)
+                } catch (e: KeyStoreException) {
+                    throw EnDecryptionException(
+                        "The KeyStore access failed.",
+                        e.stackTraceToString()
+                    )
+                } catch (e: NoSuchAlgorithmException) {
+                    throw EnDecryptionException(
+                        "The requested algorithm $AesGcmSpecs is not supported.",
+                        e.stackTraceToString()
+                    )
+                } catch (e: NoSuchPaddingException) {
+                    throw EnDecryptionException(
+                        "The requested padding ${AesGcmSpecs.PADDING} is not supported.",
+                        e.stackTraceToString()
+                    )
+                }
+                try {
+                    return@use decryptCipher.doFinal(encryptedBytes)
+                } catch (e: BadPaddingException) {
+                    if (e.stackTraceToString().contains("BAD_DECRYPT")) {
+                        e.printStackTrace()
+                    } else {
+                        throw e
+                    }
                 }
             }
+            return ByteArray(0)
         }
     }
 
