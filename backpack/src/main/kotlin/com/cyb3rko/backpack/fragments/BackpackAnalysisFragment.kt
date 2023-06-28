@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.cyb3rko.backpack.R
 import com.cyb3rko.backpack.crypto.CryptoManager
 import com.cyb3rko.backpack.crypto.CryptoManager.EnDecryptionException
@@ -35,6 +36,9 @@ import com.cyb3rko.backpack.interfaces.BackpackAnalysis
 import com.cyb3rko.backpack.modals.ErrorDialog
 import com.cyb3rko.backpack.utils.show
 import com.cyb3rko.backpack.utils.ObjectSerializer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -52,6 +56,7 @@ open class BackpackAnalysisFragment : Fragment() {
 
     private lateinit var myContext: Context
     private lateinit var fragmentInterface: BackpackAnalysis
+    private var argonRunning = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,11 +72,27 @@ open class BackpackAnalysisFragment : Fragment() {
         if (fragmentInterface.useRandom()) {
             binding.randomSourceCard.show()
         }
+        binding.argonHashingCard.setOnClickListener {
+            if (argonRunning) return@setOnClickListener
+            argonRunning = true
+            binding.argonHashingProgress.show()
+            lifecycleScope.launch(Dispatchers.IO) {
+                val hashingTime = runArgonHash()
+                argonRunning = false
+                withContext(Dispatchers.Main) {
+                    binding.argonHashingProgress.hide()
+                    binding.argonHashingSpeed.text = getString(
+                        R.string.analysis_argon_hashing_result,
+                        hashingTime.toString()
+                    )
+                }
+            }
+        }
         CryptoManager.xxHash("") // initialize hash mechanism
-        binding.hashingCard.setOnClickListener {
-            val hashingTime = runHash()
-            binding.hashingSpeed.text = getString(
-                R.string.analysis_hashing_result,
+        binding.xxhashingCard.setOnClickListener {
+            val hashingTime = runxxHash()
+            binding.xxhashingSpeed.text = getString(
+                R.string.analysis_xxhashing_result,
                 hashingTime.toString()
             )
         }
@@ -159,7 +180,10 @@ open class BackpackAnalysisFragment : Fragment() {
     }
 
     @OptIn(ExperimentalTime::class)
-    private fun runHash() = measureTime { CryptoManager.xxHash("This is a test") }
+    private fun runArgonHash() = measureTime { CryptoManager.argon2Hash("This is a test") }
+
+    @OptIn(ExperimentalTime::class)
+    private fun runxxHash() = measureTime { CryptoManager.xxHash("This is a test") }
 
     private fun getKeyStoreProvider() = KeyStore.getInstance("AndroidKeyStore").provider
 

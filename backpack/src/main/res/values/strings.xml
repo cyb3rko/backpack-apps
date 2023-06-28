@@ -41,8 +41,10 @@
     <string name="analysis_encryption_result">Encryption of dummy data took:\n%s</string>
     <string name="analysis_decryption_title">Decryption Speed (AES/GCM/NoPadding)</string>
     <string name="analysis_decryption_result">Decryption of dummy data took:\n%s</string>
-    <string name="analysis_hashing_title">Hashing Speed (XXHash3 128)</string>
-    <string name="analysis_hashing_result">Hashing of "This is a test" took:\n%s</string>
+    <string name="analysis_argon_hashing_title">Hashing Speed (Argon2id)</string>
+    <string name="analysis_argon_hashing_result">Hashing of \"This is a test\" took:\n%s</string>
+    <string name="analysis_xxhashing_title">Hashing Speed (XXHash3 128)</string>
+    <string name="analysis_xxhashing_result">Hashing of \"This is a test\" took:\n%s</string>
     <string name="analysis_keystore_provider">Android KeyStore Provider</string>
     <string name="analysis_random_provider">Secure Random Provider</string>
     <string name="analysis_provider_info" translatable="false">%1$s %2$s (%3$s)</string>
