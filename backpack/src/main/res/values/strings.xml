@@ -30,6 +30,9 @@
     <string name="dialog_password_hint">Your Password</string>
     <string name="dialog_password_error">Invalid integrity, most likely wrong password</string>
 
+    <!--  BottomSheet Content -->
+    <string name="bottomsheet_notice_button_text">Okay</string>
+
     <!-- Toasts -->
     <string name="toast_url_failed">"Opening URL failed, copied URL instead"</string>
     <string name="toast_stacktrace">Stacktrace copied</string>
