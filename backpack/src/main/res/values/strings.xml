@@ -17,7 +17,7 @@
     <string name="dialog_about_message">App Version: %1$s (%2$d)\nBuild Type: %3$s\nDevice: %4$s %5$s (%6$s)\nSoftware: Android %7$s (%8$d)</string>
     <string name="dialog_about_title">About</string>
     <string name="dialog_credits_button">Open Flaticon</string>
-    <string name="dialog_credits_message">Information icon created by Freepik - Flaticon\n\nVerified icon created by Freepik - Flaticon\n\nEmpty box icon created by juicy_fish - Flaticon\n\nRight Arrow icon created by Roundicons - Flaticon\n\nGit icon created by Creatype - Flaticon\n\nSetting icon created by Freepik - Flaticon\n\nArt icon created by Freepik - Flaticon\n\n%s</string>
+    <string name="dialog_credits_message">Information icon created by Freepik - Flaticon\n\nVerified icon created by Freepik - Flaticon\n\nEmpty box icon created by juicy_fish - Flaticon\n\nRight Arrow icon created by Roundicons - Flaticon\n\nGit icon created by Creatype - Flaticon\n\nSetting icon created by Freepik - Flaticon\n\nArt icon created by Freepik - Flaticon\n\nApp icon created by Freepik - Flaticon\n\n%s</string>
     <string name="dialog_credits_title">Icon Credits</string>
     <string name="dialog_restart_title">Restart required</string>
     <string name="dialog_restart_message">The change will be visible on next app start.\n\nDo you want to restart now?</string>
@@ -62,6 +62,12 @@
     <string name="preference_item_material_you">Material You (adaptive colors)</string>
     <string name="preference_item_material_you_summary">Use adaptive system colors over brand colors</string>
     <string name="preference_item_material_you_note">Not supported by your Android version</string>
+    <string name="preference_key_app_icon">app_icon</string>
+    <string name="preference_app_icon_description">Here you can customize the appearance of this app (app icon and label) on the home screen and the app drawer.\n\nTo be able to differentiate between multiple Backpack apps, an app-specific dual letter suffix is appended.</string>
+    <string name="preference_app_icon_toast">App icon and label changed</string>
+    <string name="preference_app_icon_dialog_title">Change app icon and label</string>
+    <string name="preference_app_icon_dialog_message">The app will close itself to change it\'s appearance.</string>
+    <string name="preference_app_icon_dialog_button">Restart</string>
 
     <!-- Biometry -->
     <string name="biometry_lock_title">Unlock Vault</string>

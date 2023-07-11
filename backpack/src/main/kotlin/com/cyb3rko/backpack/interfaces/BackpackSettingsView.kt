@@ -16,6 +16,7 @@
 
 package com.cyb3rko.backpack.interfaces
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.XmlRes
 
 /**
@@ -24,4 +25,10 @@ import androidx.annotation.XmlRes
 interface BackpackSettingsView {
     @XmlRes
     fun getPreferences(): Int
+
+    fun getPackageMainActivity(): String
+
+    fun getAppName(): String
+
+    fun getAppIcon(): Drawable
 }

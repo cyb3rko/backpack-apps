@@ -97,7 +97,7 @@ internal fun Context.showDialog(
         .setCancelable(cancelable)
 
     if (icon != null) {
-        builder.setIcon(ResourcesCompat.getDrawable(resources, icon, theme))
+        builder.setIcon(ResourcesCompat.getDrawable(resources, icon, null))
     }
 
     if (actionMessage.isNotBlank()) {
@@ -110,8 +110,23 @@ internal fun Context.showDialog(
 
 // Fragment extension functions
 
+fun Fragment.showToast(message: String, length: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this.requireContext(), message, length).show()
+}
+
 fun Fragment.openUrl(url: String, label: String) {
     this.requireContext().openUrl(url, label)
+}
+
+fun Fragment.showDialog(
+    title: String,
+    message: CharSequence,
+    icon: Int?,
+    actionMessage: String = "",
+    cancelable: Boolean = true,
+    buttonClick: () -> Unit = {},
+) {
+    requireContext().showDialog(title, message, icon, buttonClick, actionMessage, cancelable)
 }
 
 // ByteArray extension functions

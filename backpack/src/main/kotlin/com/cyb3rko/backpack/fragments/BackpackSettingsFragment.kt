@@ -45,6 +45,7 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
     @Suppress("MemberVisibilityCanBePrivate")
     protected lateinit var myContext: Context
     private lateinit var settingsInterface: BackpackSettingsView
+    internal var containerId = -1
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         myContext = requireContext()
@@ -88,6 +89,31 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
                 true
             }
             Log.i("Backpack", logMessage)
+        }
+
+        val keyAppIcon = getString(R.string.preference_key_app_icon)
+        val appIconPreference = findPreference<Preference>(keyAppIcon)
+        if (appIconPreference == null) {
+            Log.e("Backpack", "App icon preference not found.")
+            return
+        }
+        appIconPreference.let {
+            it.setOnPreferenceClickListener {
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(
+                        containerId,
+                        AppIconFragment(
+                            settingsInterface.getPackageMainActivity(),
+                            settingsInterface.getAppName(),
+                            settingsInterface.getAppIcon()
+                        )
+                    )
+                    .addToBackStack(this::class.java.name)
+                    .commit()
+                true
+            }
+            Log.i("Backpack", "App icon preference found and initialized")
         }
     }
 

@@ -39,5 +39,10 @@
     <style name="PreferenceSwitch.Backpack" parent="@style/Preference.SwitchPreferenceCompat.Material">
         <item name="widgetLayout">@layout/preference_switch</item>
     </style>
+    
+    <style name="ImageView.Round" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 
 </resources>

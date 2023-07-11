@@ -37,9 +37,13 @@ open class BackpackSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val containerId = binding.settingsContainer.id
+        val fragment = settingsInterface.getSettingsFragment().apply {
+            this.containerId = containerId
+        }
         supportFragmentManager
             .beginTransaction()
-            .replace(binding.settingsContainer.id, settingsInterface.getSettingsFragment())
+            .replace(containerId, fragment)
             .commit()
 
         setSupportActionBar(binding.topAppBar)
