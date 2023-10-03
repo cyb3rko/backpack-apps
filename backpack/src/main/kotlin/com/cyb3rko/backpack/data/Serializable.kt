@@ -18,8 +18,9 @@ package com.cyb3rko.backpack.data
 
 /**
  * The base serializable data class for Backpack data classes.
- * Always override `const val serialVersionUID` to some random number.
- *
- * [Random Long Generator](https://www.calculator.net/random-number-generator.html?slower=-9223372036854775808&supper=9223372036854775807&ctype=1)
  */
-open class Serializable: java.io.Serializable
+abstract class Serializable {
+    abstract suspend fun loadFromBytes(bytes: ByteArray): Serializable
+    abstract suspend fun toBytes(): ByteArray
+    abstract suspend fun getVersion(): Byte
+}

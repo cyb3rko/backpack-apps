@@ -290,48 +290,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.Material3.CardView.Elevated"
-            android:id="@+id/serial_uids_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="20dp"
-                android:paddingTop="12dp">
-
-                <TextView
-                    android:id="@+id/serial_uids_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:text="@string/analysis_serial_uids_title"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/serial_uids"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="8dp"
-                    android:textSize="16sp"
-                    tools:text="SerializableClass: 1234567891234567891\nSerializableClass: 1234567891234567891" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
 
 </ScrollView>

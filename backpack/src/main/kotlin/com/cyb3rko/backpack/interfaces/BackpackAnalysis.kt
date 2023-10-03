@@ -16,13 +16,13 @@
 
 package com.cyb3rko.backpack.interfaces
 
+import com.cyb3rko.backpack.data.Serializable
+
 /**
  * Interface for providing demo data to the Backpack parent analysis fragment
  */
 interface BackpackAnalysis {
     fun useRandom(): Boolean
 
-    fun getDemoData(): java.io.Serializable
-
-    fun getSerializableUids(): List<Pair<String, Long>>
+    fun getDemoData(): Serializable
 }
