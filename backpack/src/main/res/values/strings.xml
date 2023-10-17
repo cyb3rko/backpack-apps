@@ -29,6 +29,8 @@
     <string name="dialog_name_error_length">Use between %1$d-%2$d characters</string>
     <string name="dialog_password_hint">Your Password</string>
     <string name="dialog_password_error">Invalid integrity, most likely wrong password</string>
+    <string name="dialog_version_not_supported_title">Version not supported</string>
+    <string name="dialog_version_not_supported_message">Unknown file version found.\nPlease update the app and try again.</string>
 
     <!--  BottomSheet Content -->
     <string name="bottomsheet_notice_button_text">Okay</string>

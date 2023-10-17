@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.cyb3rko.backpack.data
+package com.cyb3rko.backpack.modals
 
-/**
- * The base serializable data class for Backpack data classes.
- */
-abstract class Serializable {
-    abstract suspend fun loadFromBytes(bytes: ByteArray): Serializable?
-    abstract suspend fun toBytes(): ByteArray
-    abstract suspend fun getVersion(): Byte
+import android.content.Context
+import com.cyb3rko.backpack.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
+object VersionNotSupportedDialog {
+    fun show(context: Context, ) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle(context.getString(R.string.dialog_version_not_supported_title))
+            .setMessage(context.getString(R.string.dialog_version_not_supported_message))
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
 }
