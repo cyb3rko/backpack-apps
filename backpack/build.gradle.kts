@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -35,13 +35,13 @@ android {
 }
 
 dependencies {
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.biometric:biometric:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("com.lambdapioneer.argon2kt:argon2kt:1.5.0")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.biometric)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.preference)
+    implementation(libs.argon2kt)
+    implementation(libs.google.material)
 }
