@@ -1,14 +1,14 @@
 [versions]
 agp = "8.7.2"
 kotlin = "2.0.20"
-appcompat = "1.6.1"
+appcompat = "1.7.0"
 biometric = "1.1.0"
-constraintlayout = "2.1.4"
-core = "1.12.0"
-navigation = "2.5.3"
-preference = "1.2.0"
-argon2kt = "1.5.0"
-material = "1.11.0"
+constraintlayout = "2.2.0"
+core = "1.15.0"
+navigation = "2.8.4"
+preference = "1.2.1"
+argon2kt = "1.6.0"
+material = "1.12.0"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
