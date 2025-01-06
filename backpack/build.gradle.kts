@@ -27,6 +27,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        // fix "Missing class java.lang.invoke.StringConcatFactory"
+        // (see https://github.com/Kotlin/kotlinx.serialization/issues/2145)
+        freeCompilerArgs = listOf("-Xstring-concat=inline")
     }
     buildFeatures {
         viewBinding = true
