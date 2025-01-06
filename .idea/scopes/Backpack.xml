@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="Backpack" pattern="file[Backpack.backpack.main]:kotlin//*" />
+  <scope name="Backpack" pattern="(file[Backpack.backpack.main]:kotlin//*&amp;&amp;!file[Backpack.backpack.main]:kotlin/com/cyb3rko/backpack/crypto/xxhash3/*||file[Backpack.backpack.main]:res/layout/*)&amp;&amp;!file[Backpack.backpack.main]:res/layout/preference_switch.xml" />
 </component>
