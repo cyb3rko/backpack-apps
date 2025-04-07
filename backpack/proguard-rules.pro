@@ -4,4 +4,4 @@
 # Get rid of package names, makes file smaller
 -repackageclasses
 
--keep class com.cyb3rko.backpack.** { *; }
+-keep class de.cyb3rko.backpack.** { *; }
