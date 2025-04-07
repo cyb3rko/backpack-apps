@@ -34,10 +34,12 @@ import de.cyb3rko.backpack.utils.show
 import de.cyb3rko.backpack.utils.ObjectSerializer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.security.KeyStore
 import java.security.SecureRandom
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
@@ -121,11 +123,14 @@ open class BackpackAnalysisFragment : Fragment() {
         try {
             val tempFile = File(myContext.filesDir, "enc-test")
             tempFile.createNewFile()
-            val time = measureTime {
-                CryptoManager.encrypt(
-                    ObjectSerializer.serialize(fragmentInterface.getDemoData()),
-                    tempFile
-                )
+            val time: Duration
+            runBlocking {
+                time = measureTime {
+                    CryptoManager.encrypt(
+                        fragmentInterface.getDemoData().toBytes(),
+                        tempFile
+                    )
+                }
             }
             tempFile.delete()
 
