@@ -31,8 +31,10 @@ import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.cyb3rko.backpack.R
 import de.cyb3rko.backpack.interfaces.BackpackSettingsView
+import de.cyb3rko.backpack.modals.LinksDialog
 import de.cyb3rko.backpack.modals.ListPreferenceDialog
 import de.cyb3rko.backpack.utils.BiometricAuthentication
+import de.cyb3rko.backpack.utils.Safe
 
 /**
  * The base fragment of Backpack apps' settings fragment with predefined functionality:
@@ -51,6 +53,18 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
         myContext = requireContext()
         setPreferencesFromResource(settingsInterface.getPreferences(), rootKey)
 
+        val keyAbout = Safe.KEY_ABOUT
+        val aboutPreference = findPreference<Preference>(keyAbout)
+        if (aboutPreference != null) {
+            aboutPreference.setOnPreferenceClickListener {
+                LinksDialog.show(myContext)
+                true
+            }
+            Log.i("Backpack", "About preference found and initialized")
+        } else {
+            Log.e("Backpack", "About preference not found.")
+        }
+
         val keyAppLock = getString(R.string.preference_key_app_lock)
         val appLockPreference = findPreference<SwitchPreferenceCompat>(keyAppLock)
         if (appLockPreference != null) {
@@ -60,8 +74,7 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
                 appLockPreference.isEnabled = true
             } else {
                 logMessage += "Disabled"
-                appLockPreference.setSummary(R.string.preference_item_material_you_note)
-                return
+                appLockPreference.setSummary(R.string.preference_item_app_lock_note)
             }
             Log.i("Backpack", logMessage)
         } else {
@@ -70,35 +83,29 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
 
         val keyAdaptiveColors = getString(R.string.preference_key_adaptive_colors)
         val adaptiveColorsPreference = findPreference<SwitchPreferenceCompat>(keyAdaptiveColors)
-        if (adaptiveColorsPreference == null) {
-            Log.e("Backpack", "Adaptive Colors preference not found.")
-            return
-        }
-        findPreference<SwitchPreferenceCompat>(keyAdaptiveColors)!!.let {
+        if (adaptiveColorsPreference != null) {
             var logMessage = "Adaptive Colors preference found and initialized: "
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 logMessage += "Enabled"
-                it.isEnabled = true
+                adaptiveColorsPreference.isEnabled = true
             } else {
                 logMessage += "Disabled"
-                it.setSummary(R.string.preference_item_material_you_note)
+                adaptiveColorsPreference.setSummary(R.string.preference_item_material_you_note)
                 return
             }
-            it.onPreferenceChangeListener = OnPreferenceChangeListener { _, _ ->
+            adaptiveColorsPreference.onPreferenceChangeListener = OnPreferenceChangeListener { _, _ ->
                 showRestartDialog()
                 true
             }
             Log.i("Backpack", logMessage)
+        } else {
+            Log.e("Backpack", "Adaptive Colors preference not found.")
         }
 
         val keyAppIcon = getString(R.string.preference_key_app_icon)
         val appIconPreference = findPreference<Preference>(keyAppIcon)
-        if (appIconPreference == null) {
-            Log.e("Backpack", "App icon preference not found.")
-            return
-        }
-        appIconPreference.let {
-            it.setOnPreferenceClickListener {
+        if (appIconPreference != null) {
+            appIconPreference.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(
@@ -114,6 +121,25 @@ open class BackpackSettingsFragment : PreferenceFragmentCompat() {
                 true
             }
             Log.i("Backpack", "App icon preference found and initialized")
+        } else {
+            Log.e("Backpack", "App icon preference not found.")
+            return
+        }
+
+        val keyAnalysis = Safe.KEY_ANALYSIS
+        val analysisPreference = findPreference<Preference>(keyAnalysis)
+        if (analysisPreference != null) {
+            analysisPreference.setOnPreferenceClickListener {
+                activity?.supportFragmentManager
+                    ?.beginTransaction()
+                    ?.replace(R.id.settings_container, settingsInterface.getAnalysisFragment())
+                    ?.addToBackStack(null)
+                    ?.commit()
+                true
+            }
+            Log.i("Backpack", "Analysis preference found and initialized")
+        } else {
+            Log.e("Backpack", "Analysis preference not found.")
         }
     }
 

@@ -8,8 +8,7 @@
     <string name="backup_fab_description3">Import backup</string>
 
     <!-- Menu Labels -->
-    <string name="menu_home_analysis">App Analysis</string>
-    <string name="menu_home_github">Git</string>
+    <string name="menu_home_links">Links</string>
     <string name="menu_home_settings">Settings</string>
 
     <!-- Dialog Content -->
@@ -31,6 +30,11 @@
     <string name="dialog_password_error">Invalid integrity, most likely wrong password</string>
     <string name="dialog_version_not_supported_title">Version not supported</string>
     <string name="dialog_version_not_supported_message">Unknown file version found.\nPlease update the app and try again.</string>
+    <string name="dialog_links_title">Links</string>
+    <string name="dialog_links_button">Visit</string>
+    <string name="dialog_links_github">Repository on GitHub</string>
+    <string name="dialog_links_matrix">Matrix chat room (questions, feedback, discussions)</string>
+    <string name="dialog_links_donate">Feel free to support me with a small donation ❤️</string>
 
     <!--  BottomSheet Content -->
     <string name="bottomsheet_notice_button_text">Okay</string>

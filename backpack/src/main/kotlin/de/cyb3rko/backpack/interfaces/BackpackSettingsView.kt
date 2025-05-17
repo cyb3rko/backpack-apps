@@ -18,6 +18,7 @@ package de.cyb3rko.backpack.interfaces
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.XmlRes
+import de.cyb3rko.backpack.fragments.BackpackAnalysisFragment
 
 /**
  * Interface for providing settings to the Backpack parent settings fragment
@@ -31,4 +32,6 @@ interface BackpackSettingsView {
     fun getAppName(): String
 
     fun getAppIcon(): Drawable
+
+    fun getAnalysisFragment(): BackpackAnalysisFragment
 }

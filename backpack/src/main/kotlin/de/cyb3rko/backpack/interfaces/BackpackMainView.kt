@@ -18,7 +18,6 @@ package de.cyb3rko.backpack.interfaces
 
 import android.content.Intent
 import androidx.annotation.StringRes
-import androidx.navigation.NavDirections
 import de.cyb3rko.backpack.data.BuildInfo
 
 /**
@@ -26,8 +25,6 @@ import de.cyb3rko.backpack.data.BuildInfo
  */
 interface BackpackMainView {
     fun getSettingsIntent(): Intent
-
-    fun getAnalysisNavigation(): NavDirections
 
     @StringRes
     fun getGithubLink(): Int

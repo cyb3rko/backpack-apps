@@ -24,6 +24,9 @@ object Safe {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
 
+    const val KEY_ABOUT = "about"
+    const val KEY_ANALYSIS = "analysis"
+
     fun initialize(context: Context) {
         if (!this::sharedPreferences.isInitialized) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

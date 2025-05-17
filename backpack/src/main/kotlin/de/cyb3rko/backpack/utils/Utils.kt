@@ -111,6 +111,28 @@ internal fun Context.showDialog(
     builder.show()
 }
 
+fun Context.showDialogView(
+    title: String,
+    view: View,
+    icon: Int?,
+    cancelable: Boolean = true
+) {
+    val builder = MaterialAlertDialogBuilder(
+        this,
+        com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
+    )
+        .setTitle(title)
+        .setView(view)
+        .setCancelable(cancelable)
+
+    if (icon != null) {
+        builder.setIcon(
+            ResourcesCompat.getDrawable(resources, icon, theme)
+        )
+    }
+    builder.show()
+}
+
 fun Context.getDrawableCompat(@DrawableRes id: Int): Drawable {
     return AppCompatResources.getDrawable(this, id)!!
 }

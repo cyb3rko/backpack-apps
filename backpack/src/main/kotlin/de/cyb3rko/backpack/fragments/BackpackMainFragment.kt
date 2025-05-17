@@ -28,12 +28,11 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import de.cyb3rko.backpack.R
 import de.cyb3rko.backpack.interfaces.BackpackMainView
 import de.cyb3rko.backpack.modals.AboutDialog
+import de.cyb3rko.backpack.modals.LinksDialog
 import de.cyb3rko.backpack.utils.Vibration
-import de.cyb3rko.backpack.utils.openUrl
 
 /**
  * The base fragment of Backpack apps' home fragment with predefined functionality:
@@ -66,19 +65,12 @@ open class BackpackMainFragment : Fragment() {
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     return when (menuItem.itemId) {
+                        R.id.action_links -> {
+                            LinksDialog.show(myContext)
+                            true
+                        }
                         R.id.action_settings -> {
                             startActivity(fragmentInterface.getSettingsIntent())
-                            true
-                        }
-                        R.id.action_analysis -> {
-                            findNavController().navigate(fragmentInterface.getAnalysisNavigation())
-                            true
-                        }
-                        R.id.action_github -> {
-                            openUrl(
-                                myContext.getString(fragmentInterface.getGithubLink()),
-                                "GitHub Link"
-                            )
                             true
                         }
                         R.id.action_about -> {
